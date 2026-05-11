@@ -1,0 +1,98 @@
+.TH SGUTILS_DRM 3 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities Library"
+.SH NAME
+sgutils_drm \- DRM/KMS display access via dumb buffers
+.SH SYNOPSIS
+.nf
+.B #include <sgutils/sgdrm.h>
+.fi
+.SH TYPES
+.TP
+.B sg_drm_context_t
+Opaque context wrapping a DRM dumb buffer, connector, and CRTC state.
+.TP
+.B drm_mode_info_t
+.nf
+typedef struct {
+    char     connector_name[64];
+    uint32_t connector_id;
+    uint32_t crtc_id;
+    int      width;
+    int      height;
+    int      refresh;
+    int      bpp;
+    char     driver_name[64];
+} drm_mode_info_t;
+.fi
+.SH FUNCTIONS
+.TP
+.BI "sg_drm_context_t *drm_context_create(const char *" device ");"
+Open the DRM device at
+.I device
+(e.g. "/dev/dri/card0"), find a connected output, and create a dumb buffer
+for rendering.
+Pass NULL to use the default
+.IR /dev/dri/card0 .
+Returns NULL on failure.
+.TP
+.BI "int drm_get_mode_info(const char *" device ", drm_mode_info_t *" info ", int " info_count ");"
+Query DRM device information without mapping a framebuffer.
+Fills up to
+.I info_count
+entries in the
+.I info
+array.
+Returns the number of connected outputs found, or \-1 on error.
+.TP
+.BI "int drm_context_width(const sg_drm_context_t *" ctx ");"
+Return the width of the active mode in pixels.
+.TP
+.BI "int drm_context_height(const sg_drm_context_t *" ctx ");"
+Return the height of the active mode in pixels.
+.TP
+.BI "image_t drm_context_as_image(sg_drm_context_t *" ctx ");"
+Return an
+.B image_t
+view wrapping the DRM dumb buffer.
+The returned image does
+.B not
+own the data \(em do not call
+.BR image_free (3)
+on it.
+.TP
+.BI "void drm_context_present(sg_drm_context_t *" ctx ");"
+Present the buffer to the screen.
+For single-buffer dumb buffers this is effectively a no-op since the buffer
+is already visible.
+.TP
+.BI "void drm_context_release(sg_drm_context_t *" ctx ");"
+Unmap the buffer, restore the original CRTC mode, and close the device.
+.TP
+.BI "const char *drm_context_device(const sg_drm_context_t *" ctx ");"
+Return the device path used to open the context.
+.SH EXAMPLE
+.nf
+#include <sgutils/sgdrm.h>
+
+int main(void) {
+    sg_drm_context_t *ctx = drm_context_create(NULL);
+    if (!ctx) return 1;
+
+    image_t fb = drm_context_as_image(ctx);
+    fill_image(&fb, PIXEL_RGB(0, 128, 0));
+    draw_circle(&fb, 400, 300, 100, PIXEL_RGB(255, 255, 0), 1);
+
+    drm_context_present(ctx);
+    drm_context_release(ctx);
+    return 0;
+}
+.fi
+.SH SEE ALSO
+.BR sgutils (3),
+.BR sgutils_draw (3),
+.BR sgutils_framebuffer (3),
+.BR sgdrm-describe (1),
+.BR sgdrm-clear (1)
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
+.SH LICENSE
+MIT

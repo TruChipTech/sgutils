@@ -1,0 +1,43 @@
+.TH SGFB-CLEAR 1 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities"
+.SH NAME
+sgfb-clear \- clear the Linux framebuffer to a solid color
+.SH SYNOPSIS
+.B sgfb-clear
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+.B sgfb-clear
+fills the entire framebuffer with a solid color, grayscale value, or
+a color bar test pattern.
+.SH OPTIONS
+.TP
+.BR \-d ", " \-\-device " " \fIPATH\fR
+Framebuffer device. Default: \fI/dev/fb0\fR.
+.TP
+.BR \-g ", " \-\-gray " " \fIVALUE\fR
+Grayscale value from 0 (black) to 255 (white).
+.TP
+.BR \-c ", " \-\-color " " \fIRRGGBB\fR
+Fill color in hexadecimal (e.g., FF0000 for red).
+.TP
+.BR \-t ", " \-\-test\-pattern
+Display a SMPTE-style color bar test pattern.
+.TP
+.BR \-h ", " \-\-help
+Show help message and exit.
+.TP
+.BR \-v ", " \-\-version
+Show version and exit.
+.SH EXAMPLES
+.nf
+$ sgfb-clear                  # Clear to black
+$ sgfb-clear -g 255           # Clear to white
+$ sgfb-clear -c FF0000        # Clear to red
+$ sgfb-clear --test-pattern   # Color bars
+.fi
+.SH SEE ALSO
+.BR sgfb-describe (1),
+.BR sgfb-pngdraw (1)
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
+.SH LICENSE
+MIT

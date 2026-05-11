@@ -1,0 +1,106 @@
+.TH SGUTILS 3 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities Library"
+.SH NAME
+sgutils \- Linux screen graphics utility library
+.SH SYNOPSIS
+.nf
+.B #include <sgutils/sgutils.h>
+.fi
+.SH DESCRIPTION
+.B libsgutils
+is a C library for rendering graphics directly to the Linux display via
+the legacy framebuffer
+.RI ( /dev/fb* )
+or the modern DRM/KMS
+.RI ( /dev/dri/card* )
+subsystem.
+.PP
+The unified header
+.B <sgutils/sgutils.h>
+includes all available modules.
+Individual headers can also be included separately.
+.PP
+The library is organised into the following modules:
+.TP
+.B draw.h
+Core pixel type
+.RB ( pixel_t ),
+image type
+.RB ( image_t ),
+drawing primitives, colour transforms, and alpha blending.
+.TP
+.B framebuffer.h
+Open, map, and release a Linux framebuffer device.
+.TP
+.B sgdrm.h
+Open, map, present, and release a DRM/KMS dumb buffer.
+.TP
+.B compositing.h
+Layer-based offscreen compositing with per-layer opacity.
+.TP
+.B text.h
+TrueType/OpenType text rendering via FreeType with kerning.
+.TP
+.B img-png.h
+PNG image loader (requires libpng).
+.TP
+.B img-jpeg.h
+JPEG image loader (requires libjpeg).
+.TP
+.B img-bmp.h
+BMP image loader (no external dependencies).
+.TP
+.B img-svg.h
+SVG image loader (requires librsvg + cairo).
+.SH PIXEL FORMAT
+All pixels are stored as 32-bit ARGB:
+.PP
+.nf
+Bits 31\(en24: Alpha (0x00 = transparent, 0xFF = opaque)
+Bits 23\(en16: Red
+Bits 15\(en8 : Green
+Bits  7\(en0 : Blue
+.fi
+.PP
+Convenience macros:
+.nf
+PIXEL_RGB(r, g, b)
+PIXEL_ARGB(a, r, g, b)
+PIXEL_R(px)  PIXEL_G(px)  PIXEL_B(px)  PIXEL_A(px)
+.fi
+.SH LINKING
+.nf
+# Using pkg-config (recommended)
+gcc myapp.c -o myapp $(pkg-config --cflags --libs sgutils)
+
+# Manual
+gcc myapp.c -o myapp -I/usr/local/include/sgutils -lsgutils -lm
+.fi
+.SH EXAMPLE
+.nf
+#include <sgutils/sgutils.h>
+
+int main(void) {
+    fb_context_t *ctx = fb_context_create(NULL);
+    if (!ctx) return 1;
+
+    image_t fb = fb_context_as_image(ctx);
+    fill_image(&fb, PIXEL_RGB(0, 0, 64));
+    draw_rect(&fb, 50, 50, 200, 150, PIXEL_RGB(255, 0, 0));
+
+    fb_context_release(ctx);
+    return 0;
+}
+.fi
+.SH SEE ALSO
+.BR sgutils_draw (3),
+.BR sgutils_framebuffer (3),
+.BR sgutils_drm (3),
+.BR sgutils_compositing (3),
+.BR sgutils_text (3),
+.BR sgutils_img (3),
+.BR sgfb-clear (1),
+.BR sgdrm-clear (1)
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
+.SH LICENSE
+MIT

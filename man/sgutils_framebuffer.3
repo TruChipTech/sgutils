@@ -1,0 +1,76 @@
+.TH SGUTILS_FRAMEBUFFER 3 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities Library"
+.SH NAME
+sgutils_framebuffer \- Linux framebuffer device access
+.SH SYNOPSIS
+.nf
+.B #include <sgutils/framebuffer.h>
+.fi
+.SH TYPES
+.TP
+.B fb_context_t
+.nf
+typedef struct {
+    pixel_t *data;
+    int      width;
+    int      height;
+    char    *fb_name;
+    int      fb_file_desc;
+    int      fb_size;
+} fb_context_t;
+.fi
+.SH FUNCTIONS
+.TP
+.BI "fb_context_t *fb_context_create(const char *" device ");"
+Open the framebuffer device at
+.I device
+(e.g. "/dev/fb0") and mmap it for read/write access.
+Pass NULL to use the default
+.IR /dev/fb0 .
+Returns NULL on failure.
+.TP
+.BI "fb_context_t *fb_context_get_dimensions(const char *" device ");"
+Open the framebuffer and query its dimensions without mapping the pixel buffer.
+The
+.B data
+pointer in the returned context is NULL.
+Useful for querying display size (e.g.,
+.BR sgfb-describe (1)).
+Returns NULL on failure.
+.TP
+.BI "void fb_context_release(fb_context_t *" ctx ");"
+Unmap the framebuffer, close the file descriptor, and free the context.
+.TP
+.BI "image_t fb_context_as_image(fb_context_t *" ctx ");"
+Return an
+.B image_t
+view wrapping the framebuffer data.
+The returned image does
+.B not
+own the data \(em do not call
+.BR image_free (3)
+on it.
+.SH EXAMPLE
+.nf
+#include <sgutils/framebuffer.h>
+
+int main(void) {
+    fb_context_t *ctx = fb_context_create(NULL);
+    if (!ctx) return 1;
+
+    image_t fb = fb_context_as_image(ctx);
+    fill_image(&fb, PIXEL_RGB(0, 0, 0));   /* clear to black */
+
+    fb_context_release(ctx);
+    return 0;
+}
+.fi
+.SH SEE ALSO
+.BR sgutils (3),
+.BR sgutils_draw (3),
+.BR sgutils_drm (3),
+.BR sgfb-describe (1),
+.BR sgfb-clear (1)
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
+.SH LICENSE
+MIT

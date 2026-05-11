@@ -1,0 +1,42 @@
+.TH SGDRM-CLEAR 1 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities"
+.SH NAME
+sgdrm-clear \- clear a DRM/KMS display to a solid color
+.SH SYNOPSIS
+.B sgdrm-clear
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+.B sgdrm-clear
+fills the DRM display with a solid color, grayscale value, or test pattern
+using a dumb buffer.
+.SH OPTIONS
+.TP
+.BR -d ", " --device " " \fIPATH\fR
+DRM device path (default: /dev/dri/card0).
+.TP
+.BR -g ", " --gray " " \fIVALUE\fR
+Grayscale value 0\(en255 (0=black, 255=white).
+.TP
+.BR -c ", " --color " " \fIRRGGBB\fR
+Hex color (e.g., FF0000 for red).
+.TP
+.BR -t ", " --test-pattern
+Display a color test pattern.
+.TP
+.BR -h ", " --help
+Show help message.
+.TP
+.BR -v ", " --version
+Show version.
+.SH EXAMPLES
+.nf
+$ sgdrm-clear                  # Clear to black
+$ sgdrm-clear -g 255           # Clear to white
+$ sgdrm-clear -c FF0000        # Clear to red
+$ sgdrm-clear --test-pattern   # Color bars
+.fi
+.SH SEE ALSO
+.BR sgdrm-describe (1),
+.BR sgfb-clear (1)
+
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>

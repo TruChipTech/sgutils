@@ -1,0 +1,44 @@
+.TH SGDRM-COMPOSITE 1 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities"
+.SH NAME
+sgdrm-composite \- layer-based compositing on a DRM/KMS display
+.SH SYNOPSIS
+.B sgdrm-composite
+\fB-l\fR \fISPEC\fR [\fB-l\fR \fISPEC\fR ...] [\fIOPTIONS\fR]
+.SH DESCRIPTION
+.B sgdrm-composite
+composes multiple images with positioning and per-layer opacity onto a
+DRM/KMS display via an offscreen buffer with alpha blending.
+.SH OPTIONS
+.TP
+.BR -l ", " --layer " " \fISPEC\fR
+Layer specification in the format FILE:X:Y[:OPACITY].
+OPACITY ranges from 0 (transparent) to 255 (opaque), default 255.
+May be repeated.
+.TP
+.BR -d ", " --device " " \fIPATH\fR
+DRM device (default: /dev/dri/card0).
+.TP
+.BR -c ", " --clear " " \fIRRGGBB\fR
+Background fill color before compositing.
+.TP
+.BR -h ", " --help
+Show help message.
+.TP
+.BR -v ", " --version
+Show version.
+.SH EXAMPLES
+.nf
+$ sgdrm-composite \\
+    -l background.jpg:0:0 \\
+    -l logo.png:50:50:200
+
+$ sgdrm-composite -c 333333 \\
+    -l photo.jpg:0:0:255 \\
+    -l overlay.png:100:100:180
+.fi
+.SH SEE ALSO
+.BR sgfb-composite (1),
+.BR sgdrm-describe (1)
+
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>

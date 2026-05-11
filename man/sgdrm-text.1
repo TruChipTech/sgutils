@@ -1,0 +1,48 @@
+.TH SGDRM-TEXT 1 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities"
+.SH NAME
+sgdrm-text \- render text on a DRM/KMS display using TrueType fonts
+.SH SYNOPSIS
+.B sgdrm-text
+\fB-t\fR \fITEXT\fR \fB-F\fR \fIFONT\fR [\fIOPTIONS\fR]
+.SH DESCRIPTION
+.B sgdrm-text
+renders text directly to a DRM/KMS display using any TrueType or OpenType font.
+.SH OPTIONS
+.TP
+.BR -t ", " --text " " \fISTRING\fR
+(Required) Text to render.
+.TP
+.BR -F ", " --font " " \fIPATH\fR
+(Required) Path to a .ttf or .otf font file.
+.TP
+.BR -d ", " --device " " \fIPATH\fR
+DRM device (default: /dev/dri/card0).
+.TP
+.BR -s ", " --size " " \fIN\fR
+Font size in pixels (default: 32).
+.TP
+.BR -x ", " --xpos " " \fIN\fR
+X position (default: 0).
+.TP
+.BR -y ", " --ypos " " \fIN\fR
+Y baseline position (default: font size).
+.TP
+.BR -c ", " --color " " \fIRRGGBB\fR
+Text color in hex (default: FFFFFF).
+.TP
+.BR -b ", " --bg-color " " \fIRRGGBB\fR
+Fill background before text.
+.TP
+.BR -h ", " --help
+Show help message.
+.SH EXAMPLES
+.nf
+$ sgdrm-text -t "Hello" -F /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
+$ sgdrm-text -t "Status" -F /path/to/font.ttf -s 64 -c 00FF00
+.fi
+.SH SEE ALSO
+.BR sgfb-text (1),
+.BR sgdrm-describe (1)
+
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>

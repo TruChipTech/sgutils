@@ -1,0 +1,78 @@
+.TH SGUTILS_IMG 3 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities Library"
+.SH NAME
+sgutils_img \- image file loaders (PNG, JPEG, BMP, SVG)
+.SH SYNOPSIS
+.nf
+.B #include <sgutils/img-png.h>
+.B #include <sgutils/img-jpeg.h>
+.B #include <sgutils/img-bmp.h>
+.B #include <sgutils/img-svg.h>
+.fi
+.SH DESCRIPTION
+Each image loader reads a file from disk and returns a newly allocated
+.B image_t
+with the decoded pixel data.
+The caller must free the returned image with
+.BR image_free (3).
+.PP
+Each loader is conditionally compiled.
+Enable the corresponding feature flag at build time
+.RB ( ENABLE_PNG ,
+.BR ENABLE_JPEG ,
+.BR ENABLE_BMP ,
+.BR ENABLE_SVG ).
+.SH FUNCTIONS
+.TP
+.BI "image_t *read_png_file(const char *" filename ");"
+Load a PNG image.
+Requires
+.B libpng
+and
+.BR ENABLE_PNG .
+Returns NULL on failure.
+.TP
+.BI "image_t *read_jpeg_file(const char *" filename ");"
+Load a JPEG image.
+Requires
+.B libjpeg
+and
+.BR ENABLE_JPEG .
+Returns NULL on failure.
+.TP
+.BI "image_t *read_bmp_file(const char *" filename ");"
+Load a BMP image.
+No external dependencies; requires
+.BR ENABLE_BMP .
+Returns NULL on failure.
+.TP
+.BI "image_t *read_svg_file(const char *" filename ", int " r_width ", int " r_height ");"
+Load an SVG image and rasterise it at the requested
+.IR r_width \(mu r_height
+dimensions.
+Requires
+.B librsvg
++
+.B cairo
+and
+.BR ENABLE_SVG .
+Returns NULL on failure.
+.SH EXAMPLE
+.nf
+#include <sgutils/img-png.h>
+#include <sgutils/draw.h>
+
+image_t *photo = read_png_file("photo.png");
+if (photo) {
+    /* draw, transform, composite, etc. */
+    image_free(photo);
+}
+.fi
+.SH SEE ALSO
+.BR sgutils (3),
+.BR sgutils_draw (3),
+.BR sgfb-pngdraw (1),
+.BR sgdrm-pngdraw (1)
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
+.SH LICENSE
+MIT

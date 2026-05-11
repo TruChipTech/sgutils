@@ -1,0 +1,39 @@
+.TH SGFB-TTYMODE 1 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities"
+.SH NAME
+sgfb-ttymode \- switch TTY between graphics and text mode
+.SH SYNOPSIS
+.B sgfb-ttymode
+[\fIOPTIONS\fR] <\fBgraphics\fR|\fBtext\fR>
+.SH DESCRIPTION
+.B sgfb-ttymode
+sets the TTY display mode. In \fBgraphics\fR mode, the text cursor is
+hidden and the framebuffer can be drawn to directly. In \fBtext\fR mode,
+normal terminal text output is restored.
+.PP
+This command requires root privileges.
+.SH OPTIONS
+.TP
+.BR \-t ", " \-\-tty " " \fIPATH\fR
+TTY device path. Default: \fI/dev/tty1\fR.
+.TP
+.BR \-h ", " \-\-help
+Show help message and exit.
+.TP
+.BR \-v ", " \-\-version
+Show version and exit.
+.SH EXAMPLES
+.nf
+$ sudo sgfb-ttymode graphics
+$ sudo sgfb-ttymode text
+$ sudo sgfb-ttymode -t /dev/tty2 graphics
+.fi
+.SH NOTES
+Switching to graphics mode on the active console will hide the cursor.
+Run this command over SSH or from a different TTY.
+.SH SEE ALSO
+.BR sgfb-describe (1),
+.BR sgfb-clear (1)
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
+.SH LICENSE
+MIT

@@ -1,0 +1,81 @@
+.TH SGUTILS_TEXT 3 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities Library"
+.SH NAME
+sgutils_text \- TrueType/OpenType text rendering via FreeType
+.SH SYNOPSIS
+.nf
+.B #include <sgutils/text.h>
+.fi
+.SH DESCRIPTION
+Provides text rendering with kerning support.
+Requires the library to be built with
+.B ENABLE_TEXT
+and linked against FreeType.
+.SH TYPES
+.TP
+.B fb_font_t
+Opaque type representing a loaded font face at a specific pixel size.
+.SH FUNCTIONS
+.TP
+.BI "int text_init(void);"
+Initialise the FreeType text subsystem.
+Must be called once before any other text function.
+Returns 0 on success, \-1 on failure.
+.TP
+.BI "void text_shutdown(void);"
+Shut down the text subsystem and release FreeType resources.
+.TP
+.BI "fb_font_t *font_load(const char *" path ", int " pixel_size ");"
+Load a TrueType or OpenType font from
+.I path
+at the given
+.IR pixel_size .
+Returns NULL on failure.
+.TP
+.BI "void font_free(fb_font_t *" font ");"
+Free a loaded font.
+.TP
+.BI "void draw_text(image_t *" dst ", int " x ", int " y ", const char *" text ", fb_font_t *" font ", pixel_t " color ");"
+Render a null-terminated UTF-8 string onto
+.I dst
+at baseline origin
+.RI ( x ", " y )
+with the given
+.I color
+and
+.IR font .
+Alpha blending is applied per glyph.
+.TP
+.BI "void measure_text(fb_font_t *" font ", const char *" text ", int *" out_w ", int *" out_h ");"
+Measure the bounding box of
+.I text
+without drawing.
+Width and height (in pixels) are stored in
+.I out_w
+and
+.IR out_h .
+.SH EXAMPLE
+.nf
+#include <sgutils/text.h>
+
+text_init();
+
+fb_font_t *font = font_load("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 32);
+if (font) {
+    image_t *img = image_create(640, 480);
+    fill_image(img, PIXEL_RGB(0, 0, 0));
+    draw_text(img, 10, 40, "Hello, World!", font, PIXEL_RGB(255, 255, 255));
+    font_free(font);
+    image_free(img);
+}
+
+text_shutdown();
+.fi
+.SH SEE ALSO
+.BR sgutils (3),
+.BR sgutils_draw (3),
+.BR sgfb-text (1),
+.BR sgdrm-text (1)
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
+.SH LICENSE
+MIT

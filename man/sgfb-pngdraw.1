@@ -1,0 +1,84 @@
+.TH SGFB-PNGDRAW 1 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities"
+.SH NAME
+sgfb-pngdraw, sgfb-jpgdraw, sgfb-svgdraw, sgfb-bmpdraw \- draw images to the framebuffer
+.SH SYNOPSIS
+.B sgfb-pngdraw
+\fB-f\fR \fIFILE\fR [\fIOPTIONS\fR]
+.br
+.B sgfb-jpgdraw
+\fB-f\fR \fIFILE\fR [\fIOPTIONS\fR]
+.br
+.B sgfb-svgdraw
+\fB-f\fR \fIFILE\fR [\fIOPTIONS\fR]
+.br
+.B sgfb-bmpdraw
+\fB-f\fR \fIFILE\fR [\fIOPTIONS\fR]
+.SH DESCRIPTION
+Draw an image file to the Linux framebuffer, with optional scaling, positioning,
+and color transforms. The binary name determines the default image format.
+.SH OPTIONS
+.TP
+.BR \-f ", " \-\-file " " \fIPATH\fR
+(Required) Path to the image file.
+.TP
+.BR \-d ", " \-\-device " " \fIPATH\fR
+Framebuffer device. Default: \fI/dev/fb0\fR.
+.TP
+.BR \-x ", " \-\-xpos " " \fIN\fR
+X position. Default: 0.
+.TP
+.BR \-y ", " \-\-ypos " " \fIN\fR
+Y position. Default: 0.
+.TP
+.BR \-w ", " \-\-width " " \fIN\fR
+Display width. Default: framebuffer width.
+.TP
+.BR \-H ", " \-\-height " " \fIN\fR
+Display height. Default: framebuffer height.
+.TP
+.BR \-F ", " \-\-format " " \fIFMT\fR
+Force image format: png, jpeg, svg, or bmp.
+.TP
+.BR \-i ", " \-\-invert
+Invert all pixel colors.
+.TP
+.BR \-G ", " \-\-grayscale
+Convert image to grayscale.
+.TP
+.BR \-u ", " \-\-hue " " \fIMASK\fR
+Apply a hue shift. MASK is a string of: r, g, b, c, y, m, w.
+.TP
+.BR \-T ", " \-\-hue\-threshold " " \fIN\fR
+Minimum color difference for hue shift. Default: 20.
+.TP
+.BR \-b ", " \-\-brightness " " \fIN\fR
+Adjust brightness from -255 (darker) to 255 (brighter).
+.TP
+.BR \-r ", " \-\-rotate " " \fIDEG\fR
+Rotate image: 90, 180, or 270 degrees.
+.TP
+.BR \-a ", " \-\-alpha
+Use alpha blending when drawing (for images with transparency).
+.TP
+.BR \-h ", " \-\-help
+Show help message and exit.
+.TP
+.BR \-v ", " \-\-version
+Show version and exit.
+.SH EXAMPLES
+.nf
+$ sgfb-pngdraw -f photo.png
+$ sgfb-jpgdraw -f photo.jpg -x 100 -y 50 -w 800 -H 600
+$ sgfb-pngdraw -f photo.png --grayscale --brightness 20
+$ sgfb-pngdraw -f overlay.png --alpha
+$ sgfb-svgdraw -f icon.svg -w 200 -H 200
+.fi
+.SH SEE ALSO
+.BR sgfb-describe (1),
+.BR sgfb-clear (1),
+.BR sgfb-composite (1),
+.BR sgfb-text (1)
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
+.SH LICENSE
+MIT

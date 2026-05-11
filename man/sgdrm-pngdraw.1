@@ -1,0 +1,73 @@
+.TH SGDRM-PNGDRAW 1 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities"
+.SH NAME
+sgdrm-pngdraw, sgdrm-jpgdraw, sgdrm-svgdraw, sgdrm-bmpdraw \- draw images on DRM display
+.SH SYNOPSIS
+.B sgdrm-pngdraw
+\fB-f\fR \fIFILE\fR [\fIOPTIONS\fR]
+.PP
+.B sgdrm-jpgdraw
+\fB-f\fR \fIFILE\fR [\fIOPTIONS\fR]
+.PP
+.B sgdrm-svgdraw
+\fB-f\fR \fIFILE\fR [\fIOPTIONS\fR]
+.PP
+.B sgdrm-bmpdraw
+\fB-f\fR \fIFILE\fR [\fIOPTIONS\fR]
+.SH DESCRIPTION
+Draw images onto a DRM/KMS display with optional transforms.
+The binary name determines the default image format.
+.SH OPTIONS
+.TP
+.BR -f ", " --file " " \fIPATH\fR
+(Required) Image file path.
+.TP
+.BR -d ", " --device " " \fIPATH\fR
+DRM device (default: /dev/dri/card0).
+.TP
+.BR -x ", " --xpos " " \fIN\fR
+X position (default: 0).
+.TP
+.BR -y ", " --ypos " " \fIN\fR
+Y position (default: 0).
+.TP
+.BR -w ", " --width " " \fIN\fR
+Display width (default: screen width).
+.TP
+.BR -H ", " --height " " \fIN\fR
+Display height (default: screen height).
+.TP
+.BR -F ", " --format " " \fIFMT\fR
+Force image format: png, jpeg, svg, bmp.
+.TP
+.BR -i ", " --invert
+Invert colors.
+.TP
+.BR -G ", " --grayscale
+Convert to grayscale.
+.TP
+.BR -u ", " --hue " " \fIMASK\fR
+Hue shift (mask chars: r, g, b, c, y, m, w).
+.TP
+.BR -b ", " --brightness " " \fIN\fR
+Brightness adjustment (-255 to 255).
+.TP
+.BR -r ", " --rotate " " \fIDEG\fR
+Rotate: 90, 180, or 270 degrees.
+.TP
+.BR -a ", " --alpha
+Enable alpha blending.
+.TP
+.BR -h ", " --help
+Show help message.
+.SH EXAMPLES
+.nf
+$ sgdrm-pngdraw -f photo.png
+$ sgdrm-jpgdraw -f photo.jpg -x 100 -y 50 -w 800 -H 600
+$ sgdrm-pngdraw -f overlay.png --alpha --invert
+.fi
+.SH SEE ALSO
+.BR sgfb-pngdraw (1),
+.BR sgdrm-describe (1)
+
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>

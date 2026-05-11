@@ -1,0 +1,87 @@
+.TH SGUTILS_COMPOSITING 3 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities Library"
+.SH NAME
+sgutils_compositing \- layer-based offscreen compositing
+.SH SYNOPSIS
+.nf
+.B #include <sgutils/compositing.h>
+.fi
+.SH TYPES
+.TP
+.B layer_t
+.nf
+typedef struct {
+    image_t *image;
+    int      x;
+    int      y;
+    uint8_t  opacity;   /* 0 = transparent, 255 = fully opaque */
+    int      visible;
+} layer_t;
+.fi
+.TP
+.B compositor_t
+.nf
+typedef struct {
+    layer_t **layers;
+    int       count;
+    int       capacity;
+    int       width;
+    int       height;
+} compositor_t;
+.fi
+.SH FUNCTIONS
+.TP
+.BI "compositor_t *compositor_create(int " width ", int " height ");"
+Create a compositor with the given canvas dimensions.
+Returns NULL on allocation failure.
+.TP
+.BI "void compositor_free(compositor_t *" comp ");"
+Free the compositor and all layers (including their images).
+.TP
+.BI "int compositor_add_layer(compositor_t *" comp ", image_t *" image ", int " x ", int " y ", uint8_t " opacity ");"
+Add a layer at position
+.RI ( x ", " y )
+with the given
+.IR opacity .
+The compositor takes ownership of
+.IR image .
+Returns the layer index, or \-1 on failure.
+.TP
+.BI "void compositor_render(compositor_t *" comp ", image_t *" dst ");"
+Render all visible layers onto
+.I dst
+from bottom to top using alpha blending.
+.TP
+.BI "image_t *compositor_render_to_image(compositor_t *" comp ");"
+Render all visible layers to a newly allocated image.
+Caller must free the returned image with
+.BR image_free (3).
+.SH EXAMPLE
+.nf
+#include <sgutils/compositing.h>
+
+image_t *bg = image_create(800, 600);
+fill_image(bg, PIXEL_RGB(30, 30, 60));
+
+image_t *overlay = image_create(800, 600);
+clear_image(overlay);
+draw_circle(overlay, 400, 300, 100, PIXEL_ARGB(180, 255, 0, 0), 1);
+
+compositor_t *comp = compositor_create(800, 600);
+compositor_add_layer(comp, bg, 0, 0, 255);
+compositor_add_layer(comp, overlay, 0, 0, 200);
+
+image_t *result = compositor_render_to_image(comp);
+/* use result ... */
+
+image_free(result);
+compositor_free(comp);
+.fi
+.SH SEE ALSO
+.BR sgutils (3),
+.BR sgutils_draw (3),
+.BR sgfb-composite (1),
+.BR sgdrm-composite (1)
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
+.SH LICENSE
+MIT

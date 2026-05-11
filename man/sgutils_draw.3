@@ -1,0 +1,161 @@
+.TH SGUTILS_DRAW 3 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities Library"
+.SH NAME
+sgutils_draw \- core image types, drawing primitives, transforms, and alpha blending
+.SH SYNOPSIS
+.nf
+.B #include <sgutils/draw.h>
+.fi
+.SH TYPES
+.TP
+.B pixel_t
+A 32-bit unsigned integer representing an ARGB pixel.
+.TP
+.B image_t
+.nf
+typedef struct {
+    pixel_t *data;
+    int      width;
+    int      height;
+} image_t;
+.fi
+.SH PIXEL MACROS
+.TP
+.BI "PIXEL_RGB(" r ", " g ", " b ")"
+Create a fully opaque pixel from red, green, blue components (0\(en255).
+.TP
+.BI "PIXEL_ARGB(" a ", " r ", " g ", " b ")"
+Create a pixel with explicit alpha.
+.TP
+.BI "PIXEL_R(" px ")"
+Extract the red channel from a pixel.
+.TP
+.BI "PIXEL_G(" px ")"
+Extract the green channel.
+.TP
+.BI "PIXEL_B(" px ")"
+Extract the blue channel.
+.TP
+.BI "PIXEL_A(" px ")"
+Extract the alpha channel.
+.SH IMAGE MANAGEMENT
+.TP
+.BI "image_t *image_create(int " width ", int " height ");"
+Allocate a new image with all pixels set to zero (transparent black).
+Returns NULL on allocation failure.
+.TP
+.BI "void image_free(image_t *" image ");"
+Free an image and its pixel buffer.
+.TP
+.BI "image_t *image_clone(const image_t *" src ");"
+Create an independent deep copy of
+.IR src .
+.SH DRAWING PRIMITIVES
+.TP
+.BI "void set_pixel(image_t *" dst ", int " x ", int " y ", pixel_t " color ");"
+Set a single pixel. Out-of-bounds coordinates are silently ignored.
+.TP
+.BI "pixel_t get_pixel(const image_t *" dst ", int " x ", int " y ");"
+Read a single pixel. Returns 0 for out-of-bounds coordinates.
+.TP
+.BI "void draw_rect(image_t *" dst ", int " x ", int " y ", int " w ", int " h ", pixel_t " color ");"
+Draw a filled rectangle.
+.TP
+.BI "void draw_rect_outline(image_t *" dst ", int " x ", int " y ", int " w ", int " h ", pixel_t " color ", int " thickness ");"
+Draw a rectangle outline with the given border thickness.
+.TP
+.BI "void draw_line(image_t *" dst ", int " x0 ", int " y0 ", int " x1 ", int " y1 ", pixel_t " color ");"
+Draw a line using Bresenham's algorithm.
+.TP
+.BI "void draw_circle(image_t *" dst ", int " cx ", int " cy ", int " radius ", pixel_t " color ", int " filled ");"
+Draw a circle using the midpoint algorithm.
+If
+.I filled
+is non-zero, the circle interior is filled.
+.TP
+.BI "void draw_image(image_t *" dst ", int " x ", int " y ", const image_t *" src ");"
+Copy
+.I src
+onto
+.I dst
+at
+.RI ( x ", " y )
+without alpha blending.
+.TP
+.BI "void draw_image_alpha(image_t *" dst ", int " x ", int " y ", const image_t *" src ");"
+Composite
+.I src
+onto
+.I dst
+at
+.RI ( x ", " y )
+with per-pixel alpha blending.
+.TP
+.BI "void clear_image(image_t *" dst ");"
+Set all pixels to zero (transparent black).
+.TP
+.BI "void fill_image(image_t *" dst ", pixel_t " color ");"
+Fill every pixel with
+.IR color .
+.TP
+.BI "void test_pattern(image_t *" dst ");"
+Render a SMPTE-style colour bar test pattern.
+.SH TRANSFORMS
+.TP
+.BI "void image_invert(image_t *" image ");"
+Invert all colour channels (not alpha).
+.TP
+.BI "void image_grayscale(image_t *" image ");"
+Convert to grayscale using luminance weighting.
+.TP
+.BI "void image_hueify(image_t *" image ", uint32_t " mask ", int " min_level ");"
+Shift hue channels according to
+.I mask
+(e.g.,
+.BR MASK_RED ,
+.BR MASK_CYAN ).
+Pixels below
+.I min_level
+are left unchanged.
+.TP
+.BI "void image_brightness(image_t *" image ", int " delta ");"
+Adjust brightness by
+.I delta
+(\-255 to 255).
+.TP
+.BI "void image_rotate(image_t *" image ", int " degrees ");"
+Rotate in place by 90, 180, or 270 degrees.
+.TP
+.BI "image_t *image_scale(const image_t *" src ", int " w ", int " h ");"
+Return a new image scaled to
+.IR w \(mu h
+using nearest-neighbour interpolation.
+Caller must free the result.
+.SH ALPHA BLENDING
+.TP
+.BI "pixel_t alpha_blend(pixel_t " bg ", pixel_t " fg ");"
+Blend foreground pixel
+.I fg
+over background pixel
+.I bg
+using the "over" operator.
+.SH HUE MASK CONSTANTS
+.nf
+MASK_RED      0xFF0000
+MASK_GREEN    0x00FF00
+MASK_BLUE     0x0000FF
+MASK_YELLOW   0xFFFF00
+MASK_CYAN     0x00FFFF
+MASK_MAGENTA  0xFF00FF
+MASK_WHITE    0xFFFFFF
+MASK_NONE     0x000000
+HUE_THRESHOLD_DEFAULT  20
+.fi
+.SH SEE ALSO
+.BR sgutils (3),
+.BR sgutils_framebuffer (3),
+.BR sgutils_drm (3),
+.BR sgutils_compositing (3)
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
+.SH LICENSE
+MIT

@@ -1,0 +1,10 @@
+prefix=@PREFIX@
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@
+
+Name: sgutils
+Description: Linux Screen Graphics Utilities library
+Version: @VERSION@
+Cflags: -I${includedir}/sgutils
+Libs: -L${libdir} -lsgutils
+Libs.private: @LIBS_PRIVATE@

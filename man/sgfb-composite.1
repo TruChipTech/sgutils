@@ -1,0 +1,52 @@
+.TH SGFB-COMPOSITE 1 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities"
+.SH NAME
+sgfb-composite \- compose multiple images with alpha blending
+.SH SYNOPSIS
+.B sgfb-composite
+\fB-l\fR \fISPEC\fR [\fB-l\fR \fISPEC\fR ...] [\fIOPTIONS\fR]
+.SH DESCRIPTION
+.B sgfb-composite
+renders multiple image layers onto an offscreen buffer using alpha blending
+and per-layer opacity, then writes the result to the framebuffer.
+Layers are drawn bottom-to-top (first layer is the bottom).
+.SH LAYER SPECIFICATION
+Each layer is specified as \fBFILE:X:Y[:OPACITY]\fR where:
+.TP
+.B FILE
+Path to an image file (PNG, JPEG, SVG, or BMP).
+.TP
+.B X, Y
+Position on the framebuffer.
+.TP
+.B OPACITY
+Optional opacity from 0 (fully transparent) to 255 (fully opaque).
+Default: 255.
+.SH OPTIONS
+.TP
+.BR \-l ", " \-\-layer " " \fISPEC\fR
+Add a layer. Can be repeated up to 64 times.
+.TP
+.BR \-d ", " \-\-device " " \fIPATH\fR
+Framebuffer device. Default: \fI/dev/fb0\fR.
+.TP
+.BR \-c ", " \-\-clear " " \fIRRGGBB\fR
+Background fill color before compositing.
+.TP
+.BR \-h ", " \-\-help
+Show help message and exit.
+.TP
+.BR \-v ", " \-\-version
+Show version and exit.
+.SH EXAMPLES
+.nf
+$ sgfb-composite -l background.jpg:0:0 -l logo.png:50:50:200
+$ sgfb-composite -c 333333 -l bg.png:0:0 -l overlay.png:100:100:180
+.fi
+.SH SEE ALSO
+.BR sgfb-pngdraw (1),
+.BR sgfb-text (1),
+.BR sgfb-clear (1)
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
+.SH LICENSE
+MIT

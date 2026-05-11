@@ -1,0 +1,55 @@
+.TH SGFB-TEXT 1 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities"
+.SH NAME
+sgfb-text \- render text to the framebuffer using TrueType fonts
+.SH SYNOPSIS
+.B sgfb-text
+\fB-t\fR \fITEXT\fR \fB-F\fR \fIFONT\fR [\fIOPTIONS\fR]
+.SH DESCRIPTION
+.B sgfb-text
+renders text directly to the Linux framebuffer using FreeType for
+TrueType and OpenType font rendering, with proper kerning and anti-aliasing.
+.SH OPTIONS
+.TP
+.BR \-t ", " \-\-text " " \fISTRING\fR
+(Required) The text string to render.
+.TP
+.BR \-F ", " \-\-font " " \fIPATH\fR
+(Required) Path to a .ttf or .otf font file.
+.TP
+.BR \-d ", " \-\-device " " \fIPATH\fR
+Framebuffer device. Default: \fI/dev/fb0\fR.
+.TP
+.BR \-s ", " \-\-size " " \fIN\fR
+Font size in pixels. Default: 32.
+.TP
+.BR \-x ", " \-\-xpos " " \fIN\fR
+X position. Default: 0.
+.TP
+.BR \-y ", " \-\-ypos " " \fIN\fR
+Y baseline position. Default: font size.
+.TP
+.BR \-c ", " \-\-color " " \fIRRGGBB\fR
+Text color in hex. Default: FFFFFF (white).
+.TP
+.BR \-b ", " \-\-bg\-color " " \fIRRGGBB\fR
+Optional background fill color.
+.TP
+.BR \-h ", " \-\-help
+Show help message and exit.
+.TP
+.BR \-v ", " \-\-version
+Show version and exit.
+.SH EXAMPLES
+.nf
+$ sgfb-text -t "Hello!" -F /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
+$ sgfb-text -t "Big Title" -F font.ttf -s 96 -x 50 -y 120 -c FF0000
+$ sgfb-text -t "Status" -F font.ttf -c FFFFFF -b 003366
+.fi
+.SH SEE ALSO
+.BR sgfb-describe (1),
+.BR sgfb-clear (1),
+.BR sgfb-pngdraw (1)
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
+.SH LICENSE
+MIT

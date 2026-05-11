@@ -1,0 +1,40 @@
+.TH SGFB-DESCRIBE 1 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities"
+.SH NAME
+sgfb-describe \- display Linux framebuffer device information
+.SH SYNOPSIS
+.B sgfb-describe
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+.B sgfb-describe
+queries the Linux framebuffer device and outputs the device path and
+pixel dimensions. Useful in scripts to determine screen size for image
+positioning.
+.SH OPTIONS
+.TP
+.BR \-d ", " \-\-device " " \fIPATH\fR
+Framebuffer device to query. Default: \fI/dev/fb0\fR.
+.TP
+.BR \-j ", " \-\-json
+Output information as a JSON object.
+.TP
+.BR \-h ", " \-\-help
+Show help message and exit.
+.TP
+.BR \-v ", " \-\-version
+Show version and exit.
+.SH EXAMPLES
+.nf
+$ sgfb-describe
+/dev/fb0 1920 1080
+
+$ sgfb-describe --json
+{"device":"/dev/fb0","width":1920,"height":1080}
+.fi
+.SH SEE ALSO
+.BR sgfb-clear (1),
+.BR sgfb-ttymode (1),
+.BR sgfb-pngdraw (1)
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
+.SH LICENSE
+MIT

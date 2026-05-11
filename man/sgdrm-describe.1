@@ -1,0 +1,39 @@
+.TH SGDRM-DESCRIBE 1 "2026-05-07" "SGUTILS 2.0.0" "Screen Graphics Utilities"
+.SH NAME
+sgdrm-describe \- describe DRM/KMS display outputs
+.SH SYNOPSIS
+.B sgdrm-describe
+[\fB-d\fR \fIDEVICE\fR] [\fB-j\fR] [\fB--help\fR]
+.SH DESCRIPTION
+.B sgdrm-describe
+lists all connected DRM/KMS display outputs, showing connector names,
+resolutions, refresh rates, and the driver in use.
+.SH OPTIONS
+.TP
+.BR -d ", " --device " " \fIPATH\fR
+DRM device path (default: /dev/dri/card0).
+.TP
+.BR -j ", " --json
+Output as JSON array.
+.TP
+.BR -h ", " --help
+Show help message.
+.TP
+.BR -v ", " --version
+Show version.
+.SH EXAMPLES
+.nf
+$ sgdrm-describe
+HDMI-A-1 1920x1080@60Hz (driver: i915)
+
+$ sgdrm-describe --json
+[{"connector":"HDMI-A-1","width":1920,"height":1080,"refresh":60,"driver":"i915"}]
+
+$ sgdrm-describe -d /dev/dri/card1
+.fi
+.SH SEE ALSO
+.BR sgdrm-clear (1),
+.BR sgfb-describe (1)
+
+.SH AUTHOR
+Anand <anand@truchiptechnology.com>
